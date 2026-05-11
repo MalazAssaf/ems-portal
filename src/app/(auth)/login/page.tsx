@@ -5,7 +5,6 @@ import { LoginFormData, loginSchema } from "@/lib/validations/auth";
 import useAuthStore from "@/store/authStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -30,18 +29,13 @@ export default function LoginPage() {
       setServerError("");
 
       const response = await loginApi(data);
-      const token = response.data.token;
-      const user = jwtDecode<{
-        sub: string;
-        role: "ADMIN" | "USER";
-      }>(token);
+      const { username, role } = response.data;
 
-      console.log("User", user.sub);
-      setAuth(user, token);
+      setAuth({ username, role });
 
-      if (user.role === "ADMIN") {
+      if (role === "ADMIN") {
         router.push("/dashboard");
-      } else if (user.role === "USER") {
+      } else if (role === "USER") {
         router.push("/");
       }
     } catch (err: unknown) {
