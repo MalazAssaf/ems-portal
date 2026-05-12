@@ -33,11 +33,9 @@ export default function LoginPage() {
 
       setAuth({ username, role });
 
-      if (role === "ADMIN") {
-        router.push("/dashboard");
-      } else if (role === "USER") {
-        router.push("/");
-      }
+      if (role === "ADMIN") router.push("/admin/dashboard");
+      else if (role === "MANAGER") router.push("/manager/dashboard");
+      else router.push("/employee/profile");
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const errors = err.response?.data?.errors;
