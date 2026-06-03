@@ -17,7 +17,13 @@ const useAuthStore = create<AuthStore>()(
     (set) => ({
       user: null,
       setAuth: (user) => set({ user }),
-      logout: () => set({ user: null }),
+      logout: async () => {
+        await fetch("http://localhost:8080/api/auth/logout", {
+          method: "POST",
+          credentials: "include", // sends the cookie with the request
+        });
+        set({ user: null });
+      },
     }),
     {
       name: "ems-auth",
