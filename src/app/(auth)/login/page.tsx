@@ -70,17 +70,17 @@ export default function LoginPage() {
 
         {/* Card */}
         <div
-          className="bg-white px-6 py-8 rounded-lg border"
+          className="bg-white px-6 py-8 rounded-lg border-2 shadow-md"
           style={{ borderColor: "var(--color-border)" }}
         >
           <h1
-            className="text-lg font-medium mb-1"
+            className="text-lg font-medium mb-1 text-center"
             style={{ color: "var(--color-ink)" }}
           >
             Welcome back
           </h1>
           <p
-            className="text-sm mb-6"
+            className="text-sm mb-6 text-center"
             style={{ color: "var(--color-ink-secondary)" }}
           >
             Sign in to your account to continue

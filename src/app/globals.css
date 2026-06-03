@@ -8,7 +8,7 @@
   /* Colors — primary blue */
   --color-primary: #185fa5;
   --color-primary-hover: #0c447c;
-  --color-primary-light: #ebf4ff;
+  --color-primary-light: #afd2ff;
   --color-primary-border: #bddcff;
   --color-primary-icon: #378add;
 
@@ -24,7 +24,7 @@
   --color-warning-text: #633806;
 
   --color-danger: #e24b4a;
-  --color-danger-light: #fcebeb;
+  --color-danger-light: #ede2e2;
   --color-danger-border: #f7c1c1;
   --color-danger-text: #791f1f;
 
@@ -94,7 +94,7 @@
 body {
   background-color: var(--color-surface);
   color: var(--color-ink);
-  font-family: var(--font-sans);
+  font-family: "Inter", sans-serif;
   font-size: var(--text-base);
 }
 
