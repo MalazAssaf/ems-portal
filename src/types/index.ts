@@ -1,3 +1,8 @@
+export enum UserRole {
+  ADMIN = "ADMIN",
+  MANAGER = "MANAGER",
+  EMPLOYEE = "EMPLOYEE",
+}
 export interface Employee {
   id: string;
   name: string;
@@ -5,7 +10,7 @@ export interface Employee {
   phoneNumber: string;
   hireDate: string;
   isActivated: boolean;
-  role: "ADMIN" | "MANAGER" | "EMPLOYEE";
+  role: UserRole;
   departmentInfo: {
     id: string;
     name: string;
@@ -16,20 +21,31 @@ export interface Employee {
   };
 }
 
+export interface EmployeeFilter {
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  isActivated?: boolean;
+  role?: UserRole;
+  departmentId?: string;
+  hireDateFrom?: string;
+  hireDateTo?: string;
+}
+
 export interface EmployeeRequest {
   name: string;
   email: string;
   phoneNumber: string;
   hireDate: string;
   departmentId: string;
-  role: "ADMIN" | "MANAGER" | "EMPLOYEE";
+  role: UserRole;
 }
 
 export interface EmployeeUpdateRequest {
   name: string;
   phoneNumber: string;
   departmentId: string;
-  role: "MANAGER" | "EMPLOYEE" | "ADMIN";
+  role: UserRole;
 }
 
 export interface Department {
@@ -39,6 +55,18 @@ export interface Department {
     id: string;
     name: string;
   } | null;
+  employeeCount: number;
+}
+
+export interface DepartmentFilter {
+  name?: string;
+  hasManager?: string;
+  minEmployees?: string;
+  maxEmployees?: string;
+}
+
+export interface DepartmentRequest {
+  name: string;
 }
 
 export interface PaginatedResponse<T> {
