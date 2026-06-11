@@ -29,7 +29,7 @@ export function Dropdown<T>({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between gap-2 px-3 py-2 rounded-md border text-sm"
+        className="flex items-center justify-between gap-2 px-3 py-2 rounded-md border text-sm cursor-pointer"
         style={{
           borderColor: "var(--color-border)",
           color: selected ? "var(--color-ink)" : "var(--color-ink-secondary)",
@@ -61,7 +61,7 @@ export function Dropdown<T>({
 
       {open && (
         <div
-          className="w-full absolute bottom-full mb-1 flex flex-col rounded-lg border shadow-md overflow-y-auto z-10"
+          className="w-full absolute top-full mb-1 flex flex-col rounded-lg border shadow-md overflow-y-auto z-10"
           style={{
             backgroundColor: "white",
             borderColor: "var(--color-border)",

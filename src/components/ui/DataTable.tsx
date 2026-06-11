@@ -43,7 +43,7 @@ export function DataTable<T>({
         style={{ borderColor: "var(--color-border)" }}
       >
         <table
-          className="w-full text-sm border-collapse"
+          className="w-full table-fixed text-sm border-collapse"
           style={{ minWidth: "700px" }}
         >
           <thead>
@@ -131,7 +131,7 @@ export function DataTable<T>({
           <button
             disabled={currentPage === 1}
             onClick={() => onPageChange(currentPage - 1)}
-            className="px-3 py-1.5 rounded-md text-sm border disabled:opacity-40"
+            className="px-3 py-1.5 rounded-md text-sm border disabled:opacity-40 cursor-pointer"
             style={{
               borderColor: "var(--color-border)",
               color: "var(--color-ink)",
@@ -142,7 +142,7 @@ export function DataTable<T>({
           <button
             disabled={currentPage === totalPages}
             onClick={() => onPageChange(currentPage + 1)}
-            className="px-3 py-1.5 rounded-md text-sm border disabled:opacity-40"
+            className="px-3 py-1.5 rounded-md text-sm border disabled:opacity-40 cursor-pointer"
             style={{
               borderColor: "var(--color-border)",
               color: "var(--color-ink)",

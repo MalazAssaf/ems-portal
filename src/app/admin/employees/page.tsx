@@ -11,9 +11,17 @@ import {
 import { DataTable, Column } from "@/components/ui/DataTable";
 import { Modal } from "@/components/ui/Modal";
 import { EditEmployeeForm } from "@/components/forms/EditEmployeeForm";
-import { Employee, EmployeeRequest, EmployeeUpdateRequest } from "@/types";
+import {
+  Employee,
+  EmployeeFilter,
+  EmployeeRequest,
+  EmployeeUpdateRequest,
+} from "@/types";
 import { Snackbar } from "@/components/ui/Snackbar";
 import CreateEmployeeForm from "@/components/forms/CreateEmployeeForm";
+import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
+import { useDepartments } from "@/hooks/useDepartments";
+import { FilterBar } from "@/components/ui/FilterBar";
 
 export default function EmployeesPage() {
   const [page, setPage] = useState(1);
@@ -23,6 +31,21 @@ export default function EmployeesPage() {
   const [deletingEmployee, setDeletingEmployee] = useState<Employee | null>(
     null,
   );
+
+  const emptyFilters: EmployeeFilter = {
+    name: "",
+    email: "",
+    phoneNumber: "",
+    role: undefined,
+    isActivated: undefined,
+    departmentId: "",
+    hireDateFrom: "",
+    hireDateTo: "",
+  };
+
+  const [filters, setFilters] = useState<EmployeeFilter>(emptyFilters);
+  const [appliedFilters, setAppliedFilters] =
+    useState<EmployeeFilter>(emptyFilters);
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -38,7 +61,9 @@ export default function EmployeesPage() {
     data: employeesData,
     isLoading,
     error,
-  } = useEmployees(page, pageSize);
+  } = useEmployees(page, pageSize, appliedFilters);
+
+  const { data: departmentsData } = useDepartments();
 
   const createMutation = useCreateEmployee();
   const editMutation = useUpdateEmployee();
@@ -139,6 +164,18 @@ export default function EmployeesPage() {
       ),
     },
     {
+      key: "phoneNumber",
+      label: "Phone Number",
+      render: (e) => (
+        <span
+          style={{ color: "var(--color-ink-secondary)" }}
+          className="lowercase"
+        >
+          {e.phoneNumber}
+        </span>
+      ),
+    },
+    {
       key: "department",
       label: "Department",
       render: (e) => (
@@ -211,7 +248,7 @@ export default function EmployeesPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setEditingEmployee(e)}
-            className="px-3 py-1.5 rounded-md text-xs font-medium border"
+            className="px-3 py-1.5 rounded-md text-xs font-medium border cursor-pointer"
             style={{
               borderColor: "var(--color-border)",
               color: "var(--color-ink-secondary)",
@@ -223,7 +260,7 @@ export default function EmployeesPage() {
           <button
             onClick={() => setDeletingEmployee(e)}
             disabled={deleteMutation.isPending}
-            className="px-3 py-1.5 rounded-md text-xs font-medium border"
+            className="px-3 py-1.5 rounded-md text-xs font-medium border cursor-pointer"
             style={{
               borderColor: "var(--color-danger-border)",
               color: "var(--color-danger-text)",
@@ -257,12 +294,71 @@ export default function EmployeesPage() {
         </div>
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium text-white"
+          className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium text-white cursor-pointer"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           + New employee
         </button>
       </div>
+      {/* Filter Bar */}
+      <FilterBar
+        filters={filters}
+        fields={[
+          { type: "text", name: "name", label: "Name" },
+          { type: "text", name: "email", label: "email" },
+          { type: "text", name: "phoneNumber", label: "phone number" },
+          { type: "date", name: "hireDateFrom", label: "Hired From" },
+          { type: "date", name: "hireDateTo", label: "Hired To" },
+
+          {
+            type: "select",
+            name: "role",
+            label: "Role",
+            options: [
+              { label: "All", value: "" },
+              { label: "Employee", value: "EMPLOYEE" },
+              { label: "Manager", value: "MANAGER" },
+              { label: "Admin", value: "ADMIN" },
+            ],
+          },
+
+          {
+            type: "select",
+            name: "isActivated",
+            label: "Status",
+            options: [
+              { label: "All", value: "" },
+              { label: "Active", value: "true" },
+              { label: "Inactive", value: "false" },
+            ],
+          },
+          {
+            type: "select",
+            name: "departmentId",
+            label: "Department",
+            options: [
+              { label: "All", value: "" },
+
+              ...(departmentsData?.map((d) => ({
+                label: d.name,
+                value: d.id,
+              })) ?? []),
+            ],
+          },
+        ]}
+        onChange={(name, value) =>
+          setFilters((prev) => ({ ...prev, [name]: value }))
+        }
+        onSearch={() => {
+          setAppliedFilters(filters);
+          setPage(1);
+        }}
+        onReset={() => {
+          setFilters(emptyFilters);
+          setAppliedFilters(emptyFilters);
+          setPage(1);
+        }}
+      />
 
       <DataTable
         columns={columns}
@@ -315,56 +411,17 @@ export default function EmployeesPage() {
         }}
         title="Delete Employee"
       >
-        {/* Employee info */}
-        <div className="flex items-center gap-3 mb-4">
-          <div
-            className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0"
-            style={{
-              backgroundColor: "var(--color-danger-light)",
-              color: "var(--color-danger-text)",
-            }}
-          >
-            {deletingEmployee?.name.slice(0, 2).toUpperCase()}
-          </div>
-          <div>
-            <p
-              className="text-sm font-medium"
-              style={{ color: "var(--color-ink)" }}
-            >
-              {deletingEmployee?.name}
-            </p>
-            <p
-              className="text-xs"
-              style={{ color: "var(--color-ink-secondary)" }}
-            >
-              {deletingEmployee?.email}
-            </p>
-          </div>
-        </div>
-        {/* Actions */}
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={() => {
-              setDeletingEmployee(null);
-              deleteMutation.reset();
-            }}
-            className="px-4 py-2 rounded-md text-sm border"
-            style={{
-              borderColor: "var(--color-border)",
-              color: "var(--color-ink-secondary)",
-            }}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending}
-            className="px-4 py-2 rounded-md text-sm font-medium text-white disabled:opacity-60"
-            style={{ backgroundColor: "var(--color-danger-text)" }}
-          >
-            {deleteMutation.isPending ? "Deleting..." : "Delete"}
-          </button>
-        </div>
+        <DeleteConfirmModal
+          name={deletingEmployee?.name}
+          avatar={deletingEmployee?.name}
+          subtitle={deletingEmployee?.email}
+          isPending={deleteMutation.isPending}
+          onClose={() => {
+            setDeletingEmployee(null);
+            deleteMutation.reset();
+          }}
+          onConfirm={handleDelete}
+        />
       </Modal>
       <Snackbar
         open={snackbar.open}

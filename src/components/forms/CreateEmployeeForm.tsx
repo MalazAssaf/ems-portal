@@ -1,5 +1,5 @@
 import { useDepartments } from "@/hooks/useDepartments";
-import { EmployeeRequest } from "@/types";
+import { EmployeeRequest, UserRole } from "@/types";
 import { useState } from "react";
 import { Dropdown } from "../ui/Dropdown";
 
@@ -18,7 +18,7 @@ function CreateEmployeeForm({
     phoneNumber: "",
     hireDate: "",
     departmentId: "",
-    role: "EMPLOYEE",
+    role: UserRole.EMPLOYEE,
   });
 
   const { data: departments } = useDepartments();
@@ -126,14 +126,14 @@ function CreateEmployeeForm({
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 border rounded-md"
+          className="px-4 py-2 border rounded-md cursor-pointer"
         >
           Cancel
         </button>
 
         <button
           type="submit"
-          className="px-4 py-2 rounded-md text-white bg-primary"
+          className="px-4 py-2 rounded-md text-white bg-primary cursor-pointer"
         >
           Create Employee
         </button>

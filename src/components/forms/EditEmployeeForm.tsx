@@ -137,7 +137,7 @@ export function EditEmployeeForm({ employee, handleEdit, onClose }: Props) {
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 rounded-md text-sm border"
+          className="px-4 py-2 rounded-md text-sm border cursor-pointer"
           style={{
             borderColor: "var(--color-border)",
             color: "var(--color-ink-secondary)",
@@ -147,7 +147,7 @@ export function EditEmployeeForm({ employee, handleEdit, onClose }: Props) {
         </button>
         <button
           type="submit"
-          className="px-4 py-2 rounded-md text-sm font-medium text-white"
+          className="px-4 py-2 rounded-md text-sm font-medium text-white cursor-pointer"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           Save changes
