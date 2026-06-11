@@ -5,13 +5,23 @@ import {
   getEmployees,
   updateEmployee,
 } from "@/api/employee";
-import { EmployeeRequest, EmployeeUpdateRequest } from "@/types";
+import {
+  EmployeeFilter,
+  EmployeeRequest,
+  EmployeeUpdateRequest,
+} from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useEmployees = (page: number, size: number) => {
+export const useEmployees = (
+  page: number,
+  size: number,
+  filters: EmployeeFilter,
+  options?: { enabled?: boolean },
+) => {
   return useQuery({
-    queryKey: ["employees", page, size],
-    queryFn: () => getEmployees(page, size),
+    queryKey: ["employees", page, size, filters],
+    queryFn: () => getEmployees(filters, page, size),
+    enabled: options?.enabled ?? true,
   });
 };
 
