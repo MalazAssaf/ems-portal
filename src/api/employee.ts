@@ -1,5 +1,6 @@
 import {
   Employee,
+  EmployeeFilter,
   EmployeeRequest,
   EmployeeUpdateRequest,
   PaginatedResponse,
@@ -7,10 +8,22 @@ import {
 import { api } from "./axios";
 
 export const getEmployees = async (
+  filter: EmployeeFilter,
   page = 1,
   size = 10,
 ): Promise<PaginatedResponse<Employee>> => {
-  const response = await api.get(`api/employee?page=${page}&size=${size}`);
+  const params = new URLSearchParams();
+
+  params.append("page", String(page));
+  params.append("size", String(size));
+
+  Object.entries(filter).forEach(([key, value]) => {
+    if (value !== null && value !== undefined && value !== "") {
+      params.append(key, String(value));
+    }
+  });
+
+  const response = await api.get(`api/employee?${params.toString()}`);
   return response.data.data;
 };
 
