@@ -13,15 +13,11 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("token")?.value;
 
-  console.log("pathname:", pathname);
-  console.log("token:", token ? "exists" : "missing");
-
   const isPublicRoute = publicRoutes.some((route) =>
     pathname.startsWith(route),
   );
 
   if (!token && !isPublicRoute) {
-    console.log("No token → redirecting to login");
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -33,9 +29,6 @@ export async function middleware(request: NextRequest) {
       const secret = keyBytes;
       const { payload } = await jwtVerify(token, secret);
       const role = payload.role as string;
-
-      console.log("role from token:", role);
-      console.log("isPublicRoute:", isPublicRoute);
 
       if (isPublicRoute) {
         console.log("redirecting based on role...");
@@ -50,7 +43,6 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/employee/profile", request.url));
       }
     } catch (e) {
-      console.log("token error:", e);
       const response = NextResponse.redirect(new URL("/login", request.url));
       response.cookies.delete("token");
       return response;
